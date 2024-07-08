@@ -28,7 +28,7 @@ public static partial class YouTube
                 // Use the longest token found if multiple tokens exist
                 continuationToken = continuationTokens
                     .OrderByDescending(x => x.ToString().Length)
-                    .First()
+                    .FirstOrDefault()?
                     .ToString();
             }
             catch
@@ -39,7 +39,7 @@ public static partial class YouTube
                     // Use the longest token found if multiple tokens exist
                     continuationToken = continuationTokens
                         .OrderByDescending(x => x.ToString().Length)
-                        .First()
+                        .FirstOrDefault()?
                         .ToString();
                 }
                 catch
@@ -180,10 +180,10 @@ public static partial class YouTube
                         .SelectTokens(
                             "thumbnailOverlays[*].thumbnailOverlayTimeStatusRenderer.text.simpleText"
                         )
-                        .First();
+                        .FirstOrDefault();
                 duration = ParseDurationString(durationString);
                 author = (string?)
-                    gridVideoRenderer.SelectTokens("shortBylineText.runs[*].text").First();
+                    gridVideoRenderer.SelectTokens("shortBylineText.runs[*].text").FirstOrDefault();
             }
             catch
             {
@@ -213,13 +213,13 @@ public static partial class YouTube
             try
             {
                 videoId = (string?)videoRenderer?["videoId"];
-                title = (string?)videoRenderer?.SelectTokens("title.runs[*].text").First();
+                title = (string?)videoRenderer?.SelectTokens("title.runs[*].text").FirstOrDefault();
                 var durationString = (string?)
                     videoRenderer
                         ?.SelectTokens(
                             "thumbnailOverlays[*].thumbnailOverlayTimeStatusRenderer.text.simpleText"
                         )
-                        .First();
+                        .FirstOrDefault();
                 duration = ParseDurationString(durationString);
             }
             catch
@@ -275,10 +275,10 @@ public static partial class YouTube
                         ?.SelectTokens(
                             "thumbnailOverlays[*].thumbnailOverlayTimeStatusRenderer.text.simpleText"
                         )
-                        .First();
+                        .FirstOrDefault();
                 duration = ParseDurationString(durationString);
                 author = (string?)
-                    compactVideoRenderer?.SelectTokens("longBylineText.runs[*].text").First();
+                    compactVideoRenderer?.SelectTokens("longBylineText.runs[*].text").FirstOrDefault();
             }
             catch
             {
@@ -398,7 +398,7 @@ public static partial class YouTube
                 if (album?.ToLower()?.Contains("view") ?? false)
                     album = null;
                 var durationString = (string?)
-                    playlistPanelVideoRenderer?.SelectTokens("lengthText.runs[*].text").First();
+                    playlistPanelVideoRenderer?.SelectTokens("lengthText.runs[*].text").FirstOrDefault();
                 duration = ParseDurationString(durationString);
             }
             catch
@@ -463,7 +463,7 @@ public static partial class YouTube
                 description = (string?)compactStationRenderer?["description"]?["simpleText"];
                 videoCount = int.Parse(
                     (string?)
-                        compactStationRenderer?.SelectTokens("videoCountText.runs[*].text")?.First()
+                        compactStationRenderer?.SelectTokens("videoCountText.runs[*].text")?.FirstOrDefault()
                         ?? "0"
                 );
             }
@@ -502,7 +502,7 @@ public static partial class YouTube
             try
             {
                 playlistId = (string?)gridPlaylistRenderer["playlistId"];
-                title = (string?)gridPlaylistRenderer.SelectTokens("title.runs[*].text").First();
+                title = (string?)gridPlaylistRenderer.SelectTokens("title.runs[*].text").FirstOrDefault();
                 var thumbnailVideoId = (string?)
                     gridPlaylistRenderer?["navigationEndpoint"]?["watchEndpoint"]?["videoId"];
                 thumbnails =
@@ -510,14 +510,14 @@ public static partial class YouTube
                         ? new Thumbnails() { VideoId = thumbnailVideoId, }
                         : null;
                 description = (string?)
-                    gridPlaylistRenderer?.SelectTokens("shortBylineText.runs[*].text").First();
+                    gridPlaylistRenderer?.SelectTokens("shortBylineText.runs[*].text").FirstOrDefault();
                 videoCount = int.Parse(
                     (string?)
-                        gridPlaylistRenderer?.SelectTokens("videoCountText.runs[*].text").First()
+                        gridPlaylistRenderer?.SelectTokens("videoCountText.runs[*].text").FirstOrDefault()
                         ?? "0"
                 );
                 author = (string?)
-                    gridPlaylistRenderer?.SelectTokens("shortBylineText.runs[*].text").First();
+                    gridPlaylistRenderer?.SelectTokens("shortBylineText.runs[*].text").FirstOrDefault();
             }
             catch
             {
@@ -557,7 +557,7 @@ public static partial class YouTube
 
                 var thumbnailUrl =
                     (string?)
-                        playlistRenderer?.SelectTokens("thumbnails[*].thumbnails[*].url").First()
+                        playlistRenderer?.SelectTokens("thumbnails[*].thumbnails[*].url").FirstOrDefault()
                     ?? "";
                 var videoIdRegex = new Regex(
                     @"\/vi\/(.+)\/",
@@ -567,7 +567,7 @@ public static partial class YouTube
                 var thumbnailVideoId = videoIdMatch.Groups[1].Value;
                 thumbnails = new Thumbnails() { VideoId = thumbnailVideoId, };
                 author = (string?)
-                    playlistRenderer?.SelectTokens("shortBylineText.runs[*].text").First();
+                    playlistRenderer?.SelectTokens("shortBylineText.runs[*].text").FirstOrDefault();
                 videoCount = int.Parse((string?)playlistRenderer?["videoCount"] ?? "0");
             }
             catch
@@ -612,7 +612,7 @@ public static partial class YouTube
             try
             {
                 playlistId = (string?)
-                    musicResponsiveListItemRenderer.SelectTokens("$..playlistId").First();
+                    musicResponsiveListItemRenderer.SelectTokens("$..playlistId").FirstOrDefault();
                 title = (string?)
                     musicResponsiveListItemRenderer
                         ?["flexColumns"]
